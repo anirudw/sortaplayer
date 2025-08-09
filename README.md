@@ -1,4 +1,8 @@
-# Sortaplayer ▶️
+<img width="3188" height="1202" alt="frame (3)" src="https://github.com/user-attachments/assets/517ad8e9-ad22-457d-9538-a9e62d137cd7" />
+
+
+
+# sortaplayer ▶️
 
 ## Basic Details
 **Team Name:** SHELTEX  
@@ -51,14 +55,43 @@ cd backend
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+```
 
-
+#### Run
+```bash
 # 1. Start the backend server (from the 'backend' directory)
 # Make sure your virtual environment is active
 gunicorn --workers 3 --bind 0.0.0.0:5000 app:app
 
-
 # 2. Open the frontend
 # Navigate to the 'frontend' directory and open 'index.html' in your browser.
+```
 
+---
 
+## Screenshots
+(Add at least 3 screenshots)
+1. The main landing page where the user can upload a video.  
+2. The player screen showing the "Processing..." state after a video is uploaded.  
+3. The useless player in action, displaying a frame from the color-sorted sequence.  
+
+---
+
+## Diagrams
+A simple diagram showing the user interacting with the frontend, which communicates with the Flask backend for video processing via OpenCV.
+
+---
+
+## Project Demo
+**Video:** [Add your demo video link here]  
+This video demonstrates a user uploading a standard video clip and showcases the resulting non-chronological, color-sorted playback on the web interface.
+
+---
+
+## Team Contributions
+- **Anirudh S Nair:** Backend development, including the Flask API endpoint, OpenCV video processing logic, Gunicorn deployment setup, and project structure.  
+- **Agnij T Dev:** Frontend development, creating the user interface with HTML, styling with CSS, and implementing the JavaScript logic to communicate with the backend and display the frames.
+
+---
+
+Made with ❤️ at **TinkerHub Useless Projects**
