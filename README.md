@@ -64,6 +64,7 @@ pip install -r requirements.txt
 gunicorn --workers 3 --bind 0.0.0.0:5000 app:app
 
 
+
 # 2. Open the frontend
 # Navigate to the 'frontend' directory and open 'index.html' in your browser.
 ```
