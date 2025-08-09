@@ -9,7 +9,7 @@
 
 
 ### Team Members
-- Team Lead: [Name] - [College]
+- Team Lead: [anirudh] - [College]
 - Member 2: [Name] - [College]
 - Member 3: [Name] - [College]
 
