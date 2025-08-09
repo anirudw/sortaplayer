@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
 import { ProgressBar } from "./ProgressBar";
-
+import axios from "axios";
 interface VideoUploadProps {
   onVideoProcessed: (videoUrl: string) => void;
   onUploadStart: () => void;
@@ -101,68 +101,134 @@ export function VideoUpload({ onVideoProcessed, onUploadStart, onUploadComplete 
     }
   };
 
-  const uploadVideo = async () => {
-    if (!selectedFile) return;
+  // const uploadVideo = async () => {
+  //   if (!selectedFile) return;
 
-    setIsUploading(true);
-    setUploadProgress(0);
-    setError(null);
-    onUploadStart();
+  //   setIsUploading(true);
+  //   setUploadProgress(0);
+  //   setError(null);
+  //   onUploadStart();
 
-    const formData = new FormData();
-    formData.append('video', selectedFile);
+  //   const formData = new FormData();
+  //   formData.append('video', selectedFile);
 
-    try {
-      // Simulate progress
-      const progressInterval = setInterval(() => {
-        setUploadProgress(prev => {
-          if (prev >= 90) {
-            clearInterval(progressInterval);
-            return prev;
-          }
-          return prev + Math.random() * 10;
-        });
-      }, 500);
+  //   try {
+  //     // Simulate progress
+  //     const progressInterval = setInterval(() => {
+  //       setUploadProgress(prev => {
+  //         if (prev >= 90) {
+  //           clearInterval(progressInterval);
+  //           return prev;
+  //         }
+  //         return prev + Math.random() * 10;
+  //       });
+  //     }, 500);
 
-      const response = await fetch('http://localhost:5000/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
+  //     const response = await fetch('http://localhost:5000/api/upload', {
+  //       method: 'POST',
+  //       body: formData,
+  //     });
 
-      clearInterval(progressInterval);
-      setUploadProgress(100);
+  //     clearInterval(progressInterval);
+  //     setUploadProgress(100);
 
-      if (!response.ok) {
-        throw new Error(`Upload failed: ${response.statusText}`);
-      }
+  //     if (!response.ok) {
+  //       throw new Error(`Upload failed: ${response.statusText}`);
+  //     }
 
-      const data = await response.json();
+  //     const data = await response.json();
       
-      if (data.video) {
-        toast({
-          title: "Success!",
-          description: "Your video has been processed successfully.",
-        });
-        onVideoProcessed(`http://localhost:5000/${data.video}`);
-      } else {
-        throw new Error('No video URL received from server');
+  //     if (data.video) {
+  //       toast({
+  //         title: "Success!",
+  //         description: "Your video has been processed successfully.",
+  //       });
+  //       onVideoProcessed(`http://localhost:5000/${data.video}`);
+  //     } else {
+  //       throw new Error('No video URL received from server');
+  //     }
+  //   } catch (err) {
+  //     const errorMessage = err instanceof Error ? err.message : 'Upload failed';
+  //     setError(errorMessage);
+  //     toast({
+  //       title: "Upload failed",
+  //       description: errorMessage,
+  //       variant: "destructive",
+  //     });
+  //   } finally {
+  //     setIsUploading(false);
+  //     onUploadComplete();
+  //     setTimeout(() => {
+  //       setUploadProgress(0);
+  //     }, 2000);
+  //   }
+  // };
+
+
+const uploadVideo = async () => {
+  // Guard clause to prevent upload without a file
+  if (!selectedFile) {
+    return;
+  }
+
+  // Set initial state for UI feedback
+  setIsUploading(true);
+  setUploadProgress(0);
+  setError(null);
+  onUploadStart();
+
+  // Create FormData object to send the video file
+  const formData = new FormData();
+  formData.append("video", selectedFile);
+
+  try {
+    // Send the video file to the backend
+    const response = await axios.post(
+      "http://localhost:5000/process-video", // This URL matches your Flask backend route
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+        // Track upload progress for the progress bar
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setUploadProgress(percentCompleted);
+        },
       }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Upload failed';
-      setError(errorMessage);
-      toast({
-        title: "Upload failed",
-        description: errorMessage,
-        variant: "destructive",
-      });
-    } finally {
-      setIsUploading(false);
-      onUploadComplete();
-      setTimeout(() => {
-        setUploadProgress(0);
-      }, 2000);
-    }
-  };
+    );
+
+    const data = response.data;
+
+    // Show a success toast notification
+    toast({
+      title: "Success!",
+      description: "Your video has been processed successfully.",
+    });
+
+    // Log the processed frames to the console for verification
+    console.log("Processed frames:", data.sorted_frame_urls);
+
+    // Call the parent component's callback with the array of URLs
+    // This is the key line that passes the data up to be displayed.
+    onVideoProcessed(data.sorted_frame_urls);
+  } catch (err) {
+    // Handle errors from the network request or the backend
+    const errorMessage =
+      err.response?.data?.error || err.message || "Upload failed";
+    setError(errorMessage);
+    toast({
+      title: "Upload failed",
+      description: errorMessage,
+      variant: "destructive",
+    });
+  } finally {
+    // Reset state variables after the process completes
+    setIsUploading(false);
+    onUploadComplete();
+    setTimeout(() => setUploadProgress(0), 2000);
+  }
+};
 
   const clearSelection = () => {
     setSelectedFile(null);

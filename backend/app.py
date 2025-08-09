@@ -1,14 +1,28 @@
-import cv2
-import numpy as np
-import os
+# import cv2
+# import numpy as np
+# import os
+# from flask import Flask, request, jsonify, url_for
+# from flask_cors import CORS
+# import shutil
+
+# # --- SETUP: Basic Flask app configuration ---
+# app = Flask(__name__, static_folder='static')
+# # CORS(app) # IMPORTANT: Allows the frontend to make requests to your server
+# CORS(app, resources={r"/*": {"origins": "http://localhost:8080"}})
+
+# In your Flask backend file
 from flask import Flask, request, jsonify, url_for
 from flask_cors import CORS
+import os
 import shutil
+import cv2
+import numpy as np
 
 # --- SETUP: Basic Flask app configuration ---
 app = Flask(__name__, static_folder='static')
-CORS(app) # IMPORTANT: Allows the frontend to make requests to your server
-
+# Update this line with the correct URL of your frontend
+CORS(app, resources={r"/*": {"origins": "http://localhost:8080"}}) # Replace 5173 with your frontend's port
+# ... (rest of your backend code)
 # Define folders for storing uploaded videos and the processed frames
 UPLOAD_FOLDER = 'uploads'
 SORTED_FRAMES_FOLDER = 'static/sorted_frames'
