@@ -1,12 +1,25 @@
-<img width="3188" height="1202" alt="frame (3)" src="https://github.com/user-attachments/assets/517ad8e9-ad22-457d-9538-a9e62d137cd7" />
+sortaplayer ▶️
+Basic Details
+Team Name: SHELTEX
+Team Members
+Team Lead: Anirudh S Nair - College of Engineering Trivandrum
 
+Member 2: Agnij T Dev - College of Engineering Trivandrum
 
+<<<<<<< HEAD
 # sortaplayer ▶️ 
+=======
+Project Description
+Sortaplayer is a web-based video player that defies the tyranny of time. Instead of playing videos chronologically, it reorders every frame based on its average color, creating a unique visual journey from the darkest scenes to the lightest.
+>>>>>>> 4e3d7ca (Fix .gitignore and remove venv from tracking)
 
+The Problem (that doesn't exist)
+Modern video playback is oppressively linear and predictable. Viewers are forced to experience stories in a fixed, chronological order, robbing them of the joy of pure aesthetic discovery. This rigid structure stifles creativity and turns watching a video into a mundane, paint-by-numbers experience.
 
-## Basic Details
-### Team Name: SHELTEX
+The Solution (that nobody asked for)
+Sortaplayer liberates video from its temporal chains. Our backend uses Python and OpenCV to analyze every frame, calculating its average color value. It then meticulously sorts all frames from darkest to lightest and serves them to a custom frontend player. The result is a non-narrative, color-gradient viewing experience that prioritizes visual flow over boring plot.
 
+<<<<<<< HEAD
 
 ### Team Members
 - Team Lead: Anirudh S Nair - College of Engineering Trivandrum
@@ -44,59 +57,66 @@ For Software:
 [commands]
 
 ### Project Documentation
+=======
+Technical Details
+Technologies/Components Used
+>>>>>>> 4e3d7ca (Fix .gitignore and remove venv from tracking)
 For Software:
 
-# Screenshots (Add at least 3)
-![Screenshot1](Add screenshot 1 here with proper name)
-*Add caption explaining what this shows*
+Languages used: Python, JavaScript, HTML, CSS
 
-![Screenshot2](Add screenshot 2 here with proper name)
-*Add caption explaining what this shows*
+Frameworks used: Flask
 
-![Screenshot3](Add screenshot 3 here with proper name)
-*Add caption explaining what this shows*
+Libraries used: OpenCV, NumPy, Gunicorn
 
-# Diagrams
-![Workflow](Add your workflow/architecture diagram here)
-*Add caption explaining your workflow*
+Tools used: Git, GitHub, VS Code
 
 For Hardware:
 
-# Schematic & Circuit
-![Circuit](Add your circuit diagram here)
-*Add caption explaining connections*
+A computer with a web browser.
 
-![Schematic](Add your schematic diagram here)
-*Add caption explaining the schematic*
+Implementation
+For Software:
 
-# Build Photos
-![Components](Add photo of your components here)
-*List out all components shown*
+Installation
+Bash
 
-![Build](Add photos of build process here)
-*Explain the build steps*
+# 1. Clone the repository
+git clone https://github.com/anirudw/sortaplayer.git
+cd sortaplayer
 
-![Final](Add photo of final product here)
-*Explain the final build*
+# 2. Set up the backend
+cd backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+Run
+Bash
 
-### Project Demo
-# Video
-[Add your demo video link here]
-*Explain what the video demonstrates*
+# 1. Start the backend server (from the 'backend' directory)
+# Make sure your virtual environment is active
+gunicorn --workers 3 --bind 0.0.0.0:5000 app:app
 
-# Additional Demos
-[Add any extra demo materials/links]
+# 2. Open the frontend
+# Navigate to the 'frontend' directory and open 'index.html' in your browser.
+Screenshots (Add at least 3)
+The main landing page where the user can upload a video.
 
-## Team Contributions
-- [Name 1]: [Specific contributions]
-- [Name 2]: [Specific contributions]
-- [Name 3]: [Specific contributions]
+The player screen showing the "Processing..." state after a video is uploaded.
 
----
-Made with ❤️ at TinkerHub Useless Projects 
+The useless player in action, displaying a frame from the color-sorted sequence.
 
-![Static Badge](https://img.shields.io/badge/TinkerHub-24?color=%23000000&link=https%3A%2F%2Fwww.tinkerhub.org%2F)
-![Static Badge](https://img.shields.io/badge/UselessProjects--25-25?link=https%3A%2F%2Fwww.tinkerhub.org%2Fevents%2FQ2Q1TQKX6Q%2FUseless%2520Projects)
+Diagrams
+A simple diagram showing the user interacting with the frontend, which communicates with the Flask backend for video processing via OpenCV.
 
+Project Demo
+Video
+[Add your demo video link here, e.g., a YouTube or Loom link]
+This video demonstrates a user uploading a standard video clip and showcases the resulting non-chronological, color-sorted playback on the web interface.
 
+Team Contributions
+Anirudh S Nair: Backend development, including the Flask API endpoint, OpenCV video processing logic, Gunicorn deployment setup, and project structure.
 
+Agnij T Dev: Frontend development, creating the user interface with HTML, styling with CSS, and implementing the JavaScript logic to communicate with the backend and display the frames.
+
+Made with ❤️ at TinkerHub Useless Projects

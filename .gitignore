@@ -1,0 +1,22 @@
+# Python Virtual Environment
+# This folder is machine-specific and very large.
+venv/
+**/venv/
+
+# Python cache files
+# These are auto-generated and clutter the repository.
+__pycache__/
+*.pyc
+
+# Project-specific temporary folders
+# We don't want to commit user uploads or generated frames.
+uploads/
+static/sorted_frames/
+
+# Editor-specific settings
+# For VS Code users.
+.vscode/
+
+# OS-specific files
+# For macOS users.
+.DS_Store
