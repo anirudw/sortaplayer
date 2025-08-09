@@ -48,10 +48,9 @@ def clear_folder(folder_path):
 @app.route('/process-video', methods=['POST'])
 def process_video():
     """
-    This function defines the API endpoint that the frontend will call.
-    It handles video upload, processing, and the response.
+    This function now only processes and returns a single video file.
     """
-    # 1. RECEIVE THE VIDEO FILE from the frontend's request.
+    # 1. RECEIVE THE VIDEO FILE
     if 'video' not in request.files:
         return jsonify({"error": "No video file provided"}), 400
     
@@ -59,11 +58,16 @@ def process_video():
     video_path = os.path.join(app.config['UPLOAD_FOLDER'], video_file.filename)
     video_file.save(video_path)
 
-    # Clean up results from any previous runs.
     clear_folder(app.config['SORTED_FRAMES_FOLDER'])
 
-    # 2. PROCESS THE VIDEO using OpenCV.
+    # 2. PROCESS THE VIDEO
     cap = cv2.VideoCapture(video_path)
+    
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    frame_size = (frame_width, frame_height)
+
     frames_data = []
     frame_count = 0
 
@@ -72,8 +76,7 @@ def process_video():
         if not success:
             break
         
-        # Calculate average color and a "darkness" score (distance from black).
-        avg_color = cv2.mean(frame)[:3] # We only need B,G,R
+        avg_color = cv2.mean(frame)[:3]
         darkness_score = avg_color[0]**2 + avg_color[1]**2 + avg_color[2]**2
         
         frames_data.append({'score': darkness_score, 'frame': frame})
@@ -81,27 +84,36 @@ def process_video():
         
     cap.release()
 
-    # 3. SORT and SAVE the frames.
+    # 3. SORT the frames.
     frames_data.sort(key=lambda x: x['score'])
 
-    sorted_frame_urls = []
-    for i, data in enumerate(frames_data):
-        frame_filename = f'frame_{i:05d}.png'
-        frame_path = os.path.join(app.config['SORTED_FRAMES_FOLDER'], frame_filename)
-        cv2.imwrite(frame_path, data['frame'])
+    # Setup the VideoWriter to create the sorted video
+    # sorted_video_filename = 'sorted_video.mp4'
+    sorted_video_filename = 'sorted_video.avi'
+    sorted_video_path = os.path.join(app.config['SORTED_FRAMES_FOLDER'], sorted_video_filename)
+   # fourcc = cv2.VideoWriter_fourcc(*'avc1') # This one failed
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    video_writer = cv2.VideoWriter(sorted_video_path, fourcc, fps, frame_size)
+
+    # 4. WRITE frames to the new video.
+    for data in frames_data:
+        # Write the frame to the VideoWriter object
+        video_writer.write(data['frame'])
+
+    # IMPORTANT! Release the VideoWriter to save the file correctly
+    video_writer.release()
         
-        # Generate a public URL for each saved frame. The frontend will use these.
-        url = url_for('static', filename=f'sorted_frames/{frame_filename}', _external=True)
-        sorted_frame_urls.append(url)
-        
-    # 4. SEND THE RESPONSE back to the frontend.
-    # This JSON object is the "API Contract".
+    # 5. SEND THE RESPONSE back to the frontend.
+    
+    # Generate the URL for the newly created video
+    sorted_video_url = url_for('static', filename=f'sorted_frames/{sorted_video_filename}', _external=True)
+    
+    # Return a simplified JSON response with only the video URL
     return jsonify({
         "message": "Processing complete!",
         "frameCount": frame_count,
-        "sorted_frame_urls": sorted_frame_urls
+        "sorted_video_url": sorted_video_url 
     })
-
 # --- RUN THE SERVER ---
 if __name__ == '__main__':
     # This starts the server. Keep this terminal running.
